@@ -319,6 +319,7 @@ struct vmm_softc_md {
 	uint32_t		nr_rvi_cpus;	/* [I] */
 	uint32_t		nr_ept_cpus;	/* [I] */
 	uint8_t			pkru_enabled;	/* [I] */
+	uint8_t			nested_vmm_support;	/* [I] */
 };
 
 /*
@@ -1014,6 +1015,11 @@ struct vcpu {
 	uint32_t vc_vmx_vmcs_state;		/* [a] */
 #define VMCS_CLEARED	0
 #define VMCS_LAUNCHED	1
+
+	/* Nested VMX */
+	uint64_t vc_shadow_vmcs_pa;		/* [v] */
+	struct vmcs *vc_shadow_vmcs;		/* [v] */
+	int vc_is_nested;			/* [v] */
 
 	/* SVM only (all requiring [v]) */
 	vaddr_t vc_svm_hsa_va;
