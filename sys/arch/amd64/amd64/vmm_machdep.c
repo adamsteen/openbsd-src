@@ -294,6 +294,12 @@ vmm_attach_machdep(struct device *parent, struct device *self, void *aux)
 	if (rcr4() & CR4_PKE)
 		sc->sc_md.pkru_enabled = 1;
 
+	sc->sc_md.nested_vmm_support = 0;
+	if (vmm_softc->mode == VMM_MODE_EPT &&
+	    (curcpu()->ci_vmm_cap.vcc_vmx.vmx_procbased2_ctls &
+	    VMCS_PROC_BASED_CTLS2_VME))
+		sc->sc_md.nested_vmm_support = 1;
+
 	if (sc->sc_md.nr_ept_cpus) {
 		printf(": VMX/EPT");
 		sc->mode = VMM_MODE_EPT;
